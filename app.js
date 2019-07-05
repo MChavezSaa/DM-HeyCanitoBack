@@ -69,34 +69,25 @@ mc.connect(function(err){
             if (err) throw err;
             console.log(values);
             console.log('insert producto realizado');
-          });
-          mc.end(function(err) {
-            if (err) {
-              return console.log(err.message);
-            }
-          });                
+          });               
 });
 
 //escuchar peticiones
-app.listen(80,()=>{
-console.log('Express Server - puerto 80 online');
+app.listen(3000,()=>{
+console.log('Express Server - puerto 3000 online');
 });
 
 // Rutas
-app.get('/',(req, res,next)=>{
-    res.status(200).json({
-        Ok: true,
-        mensaje: 'Peticion realizada correctamente'
-    })
-});
 
-//get productos
-app.get('/productos', function(req,res){
-    mc.query('SELECT * FROM producto', function(error,  results, fields ){
+/**listar todos los productos */
+app.get('/productos',function(req,res){
+    mc.query('SELECT * FROM producto', function(error, results, fields){
         if(error) throw error;
-        return res.send({error: false, data: results, message:'Lista de productos.'})
-    })
-})
+        return res.send({
+            error: false, data: results, message:'Lista de productos.'
+        });
+    });
+});
 
 //agregar producto
 app.post('/producto', function(req, res){
@@ -147,5 +138,11 @@ app.put('/producto/:id', function(req,res){
             result: results,
         })
     })
-})
+});
 
+app.get('/',(req, res,next)=>{
+    res.status(200).json({
+        Ok: true,
+        mensaje: 'Peticion realizada correctamente'
+    })
+});
